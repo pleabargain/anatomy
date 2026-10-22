@@ -236,6 +236,7 @@ Each framework-free example has a Node build script that writes standalone pages
 | Example | What it shows | Build |
 |---|---|---|
 | [`dial-indicator`](examples/dial-indicator) | A dial gauge on a stand over a carriage of gauge blocks. The smallest example, about 300 lines. | `node examples/dial-indicator/build.mjs` |
+| [`height-gauge`](examples/height-gauge) | A bench height gauge on a granite surface plate: a carriage on two ground ways carries three gauge standards 18, 14 and 10 mm tall, and a cast stand holds a dial case whose bored bottom guides the plunger. The dial is graduated 0 to 20 in 1 mm divisions and turns one full revolution per 20 mm of travel, so the needle reads the standard under the anvil. 41 solids, and a geometry audit that must pass. | `node examples/height-gauge/build.mjs` |
 | [`desk-computer`](examples/desk-computer) | A 1984-style desk computer with a keyboard you can type on. The typed line appears on a CRT drawn in the plane of the case front, and switching it off collapses the picture to a line and a dot. About 85 solids. | `node examples/desk-computer/build.mjs` |
 | [`arcade-cabinet`](examples/arcade-cabinet) | An upright arcade cabinet with its side panel off. Drop a quarter: it rolls down the coin chute past the coin-switch wire into the cash box, a pulse runs along the cable to the board, and the CRT warms up into an attract mode drawn in the plane of the tilted monitor. About 240 solids and 15 cables. | `node examples/arcade-cabinet/build.mjs` |
 | [`raptor-engine`](examples/raptor-engine) | A Raptor 2 engine in a test stand. It comes apart into 11 assemblies, and a WebGL plume, shock, splash and steam render between the back and front SVG. The reference for dense pipework, smooth shading, fades and the audit. The build takes a few minutes. | `node examples/raptor-engine/build.mjs` |
@@ -254,6 +255,7 @@ The Raptor and the arcade cabinet also print. `node scripts/print.mjs examples/r
 - **[`kit/`](kit)** is the drawing library the figures are built from: the isometric camera, solids and a parts library (`iso-kit`), round parts on any axis (`lathe.mjs`), pipes and cables (`tube.mjs`), the WebGL layer (`gl.mjs`), the 3D runtime (`turn*.mjs`), and React components (`react/`). Apart from React for those components, it has no dependencies.
 - **[`references/`](references)** are the long-form guides Claude opens when it needs them: craft, the kit API, motion, React, verification, WebGL, a design walkthrough and the 3D mode.
 - **Verification.** [`kit/audit.mjs`](kit/audit.mjs) proves the geometry: nothing passes through anything, every end sits on a mount, and every overlap is drawn in depth order (`node build.mjs --audit`). In headless Chrome, [`scripts/capture.mjs`](scripts/capture.mjs) and [`scripts/drive.mjs`](scripts/drive.mjs) take screenshots, close-ups and slowed-down contact sheets, [`scripts/lines.mjs`](scripts/lines.mjs) fails any line that ends in mid-air, and [`scripts/turn-check.mjs`](scripts/turn-check.mjs) checks 3D figures. The skill tells Claude to read every PNG it makes.
+- **Granularity keeps the model on the job.** A figure is a long build, and a build too big to hold in one pass is a build that gets lost, half-finished and half-remembered. Cutting the work into small tasks, each with one check and one commit, keeps the model from being overwhelmed: every step fits in the working context, and a lost session costs one task instead of the whole figure. [`examples/height-gauge/PLAN.md`](examples/height-gauge/PLAN.md) is a worked example — the task list, the strategy and the log live in the repository, so the handover survives a compaction.
 
 <details>
 <summary><b>Repository layout</b></summary>
@@ -287,7 +289,7 @@ anatomy/
 │   ├── inline-kit.mjs        the kit as source, to inline into a standalone page
 │   ├── turn-check.mjs        3D checks in the browser (with turn-fidelity.mjs)
 │   └── turn-bench.mjs        3D timing in Node
-├── examples/                 eight complete figures, built pages committed
+├── examples/                 nine complete figures, built pages committed
 ├── evals/evals.json          test prompts and what a good answer contains
 └── .github/                  issue forms, PR template, CI, README images
 ```

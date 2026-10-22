@@ -68,31 +68,31 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
 | S24 | Plunger: anvil resting on the standard | build runs, audit clean | [x] |
 | S25 | Plunger: stem in the bore | build runs, audit clean | [x] |
 | S26 | `node build.mjs --audit` | prints `audit passed` | [x] |
-| S28 | Live: page script, carriage moves in x | carriage follows the model | [ ] |
-| S29 | Live: needle angle from the model | needle points at the travel | [ ] |
-| S30 | Live: readout text from the model | readout shows the standard | [ ] |
-| S31 | Live: pointer drag on the carriage | drag moves the carriage | [ ] |
-| S32 | Live: arrow keys step between the stops | readout changes | [ ] |
-| S33 | Live: idle tour cycles the stops | carriage cycles on its own | [ ] |
-| S34 | Live: reduced motion still, offscreen stops | capture is static | [ ] |
-| S35 | Line ends, dark page | `node scripts/lines.mjs examples/height-gauge/height-gauge.html --out shots/hg-lines.png` prints `line ends: 0` | [ ] |
-| S36 | Line ends, light page | same for `height-gauge-light.html` | [ ] |
-| S37 | Capture: desktop, dark | PNG read | [ ] |
-| S38 | Capture: desktop, light | PNG read | [ ] |
-| S39 | Capture: 390 wide, both themes | PNG read | [ ] |
-| S40 | Close-up: the face and the needle | PNG read | [ ] |
-| S41 | Close-up: the anvil and the standard | PNG read | [ ] |
-| S42 | Close-up: the case and the yoke | PNG read | [ ] |
-| S43 | Close-up: the stand and the ways | PNG read | [ ] |
-| S44 | Fix what the close-ups show, re-capture | PNG read | [ ] |
-| S45 | README: example table row | `git diff` shows README | [ ] |
-| S46 | README: note that small tasks help the model | `git diff` shows README | [ ] |
-| S47 | SKILL.md: height gauge in the example list | `git diff` shows SKILL.md | [ ] |
-| S48 | CHANGELOG: entry under Unreleased | `git diff` shows CHANGELOG | [ ] |
-| S49 | CI: add the height gauge to the build list | `git diff` shows the workflow | [ ] |
-| S50 | Final rebuild of both themes, commit the pages | `git status --short` clean after rebuild | [ ] |
-| S51 | Copy the example into `C:/Users/denni/.agents/skills/anatomy/examples/height-gauge/` | the installed skill has the folder | [ ] |
-| S52 | Push to the fork | explicit approval first | [ ] |
+| S27 | Live: page script, carriage moves in x | carriage follows the model | [x] |
+| S28 | Live: needle angle from the model | needle points at the travel | [x] |
+| S29 | Live: readout text from the model | readout shows the standard | [x] |
+| S30 | Live: pointer drag on the carriage | drag moves the carriage | [x] |
+| S31 | Live: arrow keys step between the stops | readout changes | [x] |
+| S32 | Live: idle tour cycles the stops | carriage cycles on its own | [x] |
+| S33 | Live: reduced motion still, offscreen stops | capture is static | [x] |
+| S34 | Line ends, dark page | `node scripts/lines.mjs examples/height-gauge/height-gauge.html --out shots/hg-lines.png` prints `line ends: 0` | [x] |
+| S35 | Line ends, light page | same for `height-gauge-light.html` | [x] |
+| S36 | Capture: desktop, dark | PNG read | [x] |
+| S37 | Capture: desktop, light | PNG read | [x] |
+| S38 | Capture: 390 wide, both themes | PNG read | [x] |
+| S39 | Close-up: the face and the needle | PNG read | [x] |
+| S40 | Close-up: the anvil and the standard | PNG read | [x] |
+| S41 | Close-up: the case and the yoke | PNG read | [x] |
+| S42 | Close-up: the stand and the ways | PNG read | [x] |
+| S43 | Fix what the close-ups show, re-capture | PNG read | [x] |
+| S44 | README: example table row | `git diff` shows README | [x] |
+| S45 | README: note that small tasks help the model | `git diff` shows README | [x] |
+| S46 | SKILL.md: height gauge in the example list | `git diff` shows SKILL.md | [x] |
+| S47 | CHANGELOG: entry under Unreleased | `git diff` shows CHANGELOG | [x] |
+| S48 | CI: add the height gauge to the build list | `git diff` shows the workflow | [x] |
+| S49 | Final rebuild of both themes, commit the pages | `git status --short` clean after rebuild | [x] |
+| S50 | Copy the example into `C:/Users/denni/.agents/skills/anatomy/examples/height-gauge/` | the installed skill has the folder | [ ] |
+| S51 | Push to the fork | explicit approval first | [ ] |
 
 ### Done
 
@@ -124,6 +124,23 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
   not a bias: the arm now stops at y=-10 and the prongs sit at x 5..8, so the plunger passes in
   front of the arm. `node examples/height-gauge/build.mjs --audit` printed `audit passed`
   (22 items, 41 solids).
+- S27–S33 The live script: the carriage slides in x, the plunger rides a spring, the needle and
+  the readout both read the model, the pointer steers, the arrow keys step between the stops, the
+  idle tour cycles, reduced motion holds still and the loop stops offscreen.
+  `node scripts/drive.mjs examples/height-gauge/height-gauge.html --actions tmp/drive-hg.json`
+  printed `standard 2 · 14.0 mm` after ArrowLeft, `standard 1 · 18.0 mm` after Home, and
+  `standard 2 · 14.0 mm` after a drag.
+- S34–S35 The line-end check found ten ends in the air: the two major graduations on the dial
+  were too long to count as marks, the name plate's rules floated, and the scale strip's major
+  ticks stopped short. Fixed by an inner graduation circle on the dial, `free` on the name
+  plate's rules, and a rule line on the scale strip that the major ticks land on.
+  `node scripts/lines.mjs` printed `line ends: 0` for both pages.
+- S36–S43 Captures read at desktop and 390 wide in both themes, and at 6× on the dial, 7× on the
+  plunger and 5× on the yoke. The close-ups showed the anvil too narrow to read as a measuring
+  pad, so it grew from 2.4 to 2.8, and the readout was taken from the carriage instead of the
+  spring, so it now reads the height the needle points at.
+- S44–S49 The README row, the README note on granularity, the SKILL.md example list, the
+  CHANGELOG entry and the CI build step. The build is byte-identical on a rebuild.
 
 ## Log
 
@@ -135,3 +152,7 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
 - S12–S16: `node examples/height-gauge/build.mjs --audit` printed `audit passed`.
   `node scripts/capture.mjs examples/height-gauge/height-gauge.html --out shots/hg-02.png` and
   `--zoom 180,40,200,140 --zoom-scale 4` read the dial: the needle points at graduation 14.
+- S17–S26: `node examples/height-gauge/build.mjs --audit` printed `audit passed`.
+- S27–S49: the live script, the line-end check (`line ends: 0` on both pages), the captures and
+  the documentation all landed. `node examples/height-gauge/build.mjs --audit` printed
+  `audit passed` and the two built pages are byte-identical on a rebuild.

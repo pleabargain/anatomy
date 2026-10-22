@@ -37,6 +37,12 @@ jobs:
           node examples/dial-indicator/build.mjs
           node examples/dial-indicator/build.mjs --light
 
+      - name: Height gauge
+        run: |
+          node examples/height-gauge/build.mjs
+          node examples/height-gauge/build.mjs --light
+          node examples/height-gauge/build.mjs --audit
+
       - name: Desk computer
         run: |
           node examples/desk-computer/build.mjs

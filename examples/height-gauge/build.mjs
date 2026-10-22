@@ -401,7 +401,7 @@ function draw() {
   carriage.forEach((el) => el.setAttribute("transform", translateAlong(P, [dx, 0, 0])));
   plunger.forEach((el) => el.setAttribute("transform", translateAlong(P, [0, 0, tip.at - REST_TOP])));
   needle.setAttribute("d", needlePath(turnOf(travelOf(tip.at))));
-  const text = readoutOf(x);
+  const text = readoutOf(x, tip.at);
   if (readout.textContent !== text) readout.textContent = text;
   stage.setAttribute("aria-valuenow", String(Math.round(travelOf(tip.at))));
   stage.setAttribute("aria-valuetext", wordsOf(x));

@@ -26,7 +26,7 @@ export const BLOCKS = [
   { id: 2, x: 0, h: 14 },
   { id: 3, x: 19, h: 10 },
 ];
-export const ANVIL = { x: 0, y: 0, r: 2.4, h: 0.8 };
+export const ANVIL = { x: 0, y: 0, r: 2.8, h: 0.8 };
 export const STEM_R = 1.6;
 export const PLUNGER_L = 25;
 export const CASE = { x: 0, y: 0, r: 15, z: 48, h: 22 };
@@ -82,9 +82,9 @@ export function contactAt(cx) {
 export const travelOf = (top) => top - DECK;
 export const turnOf = (travel) => travel / SCALE;
 
-export function readoutOf(cx) {
+export function readoutOf(cx, top = contactAt(cx).top) {
   const state = contactAt(cx);
-  const travel = travelOf(state.top);
+  const travel = travelOf(top);
   const name = state.block ? `standard ${state.block.id}` : "the carriage deck";
   return `${name} · ${travel.toFixed(1)} mm`;
 }
