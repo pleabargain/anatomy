@@ -15,7 +15,7 @@ const HEIGHT = 450;
 
 const POINTS = [
   ...k.boxCorners(M.PLATE, -M.PLATE_H - M.FOOT_SHANK_H - M.FOOT_PAD_H, 0),
-  [M.CASE.x, M.CASE.y, M.CASE.z + M.CASE.h + M.DOME.h + M.FACE_H + M.BEZEL_H],
+  [M.CASE.x, M.CASE.y, M.FACE_TOP + M.FACE_H + M.HUB.h],
   [M.COLUMN.x, M.COLUMN.y, M.COLUMN_TOP],
 ];
 const P = k.fitProjection(POINTS, WIDTH, HEIGHT, { pad: 26, azimuth: 40 });
@@ -39,6 +39,61 @@ function knurlAlong(F, radius, s0, s1, count) {
     lines.push(k.segment(G.pointOf(F, s0, radius, angle), G.pointOf(F, s1, radius, angle), P));
   }
   return lines.join("");
+}
+
+{
+  const F = G.frameAlong([M.CASE.x, M.CASE.y, M.CASE.z], [0, 0, 1]);
+  const body = [[0, M.CASE.r], [M.CASE_SHOULDER, M.CASE.r], [M.CASE.h, M.CASE_TOP_R]];
+  const head = [[M.CASE_BORE_H, M.CASE.r], [M.CASE_SHOULDER, M.CASE.r], [M.CASE.h, M.CASE_TOP_R]];
+  const from = M.CASE.z + M.CASE_KNURL.from;
+  const to = M.CASE.z + M.CASE_KNURL.to;
+  put(
+    "stand.case",
+    [M.CASE.x, M.CASE.y, M.CASE.z + M.CASE.h / 2],
+    S(G.solidOf(body, F, P), { tone: "mid" }) +
+      Ln(k.sideArc(M.CASE.x, M.CASE.y, M.CASE.r, from, P, 40), { tone: "faint" }) +
+      Ln(k.sideArc(M.CASE.x, M.CASE.y, M.CASE.r, to, P, 40), { tone: "faint" }) +
+      Ln(k.knurl(M.CASE.x, M.CASE.y, M.CASE.r, from, to, 72, P, 0.3), { tone: "lo" }),
+    [
+      record(A.ring(F, 0, M.CASE_BORE_H, M.BORE_R, M.CASE.r, { name: "stand.case" })),
+      record(A.solid(F, head, { name: "stand.case" })),
+    ],
+  );
+}
+
+{
+  const z = M.FACE_TOP;
+  const top = z + M.FACE_H;
+  const ticks = k.radialTicks(M.CASE.x, M.CASE.y, M.GRAD_R, M.SCALE, M.MAJOR_EVERY, top, [1.3, 2.4], P, M.DIAL_ZERO);
+  const zero = [Math.sin(M.DIAL_ZERO), -Math.cos(M.DIAL_ZERO)];
+  put(
+    "stand.face",
+    [M.CASE.x, M.CASE.y, z],
+    S(k.cylinder(M.CASE.x, M.CASE.y, M.FACE_R, z, M.FACE_H, P, 64, 0.5), { tone: "hi", crease: "lo" }) +
+      Ln(k.ring(M.CASE.x, M.CASE.y, M.GRAD_R, top, P, 64), { tone: "faint" }) +
+      Ln(ticks.minor, { tone: "lo" }) +
+      Ln(ticks.major, { tone: "mid" }) +
+      Ln(
+        k.lineOnTop(
+          [M.CASE.x + zero[0] * M.GRAD_R, M.CASE.y + zero[1] * M.GRAD_R],
+          [M.CASE.x + zero[0] * (M.GRAD_R - 3.4), M.CASE.y + zero[1] * (M.GRAD_R - 3.4)],
+          top,
+          P,
+        ),
+        { tone: "hi" },
+      ) +
+      k.faceTextSvg(k.topMatrix([M.CASE.x, M.CASE.y + 7], top, P, "x"), "mm", { size: 2.6, tone: "lo", anchor: "middle" }),
+    [record(A.cylinder(M.CASE.x, M.CASE.y, M.FACE_R, z, M.FACE_H, { name: "stand.face" }))],
+  );
+}
+
+{
+  put(
+    "stand.hub",
+    [M.CASE.x, M.CASE.y, M.FACE_TOP + M.FACE_H + M.HUB.h / 2],
+    S(k.cylinder(M.CASE.x, M.CASE.y, M.HUB.r, M.FACE_TOP + M.FACE_H, M.HUB.h, P, 32, 0.2), { tone: "hi", crease: "lo" }),
+    [record(A.cylinder(M.CASE.x, M.CASE.y, M.HUB.r, M.FACE_TOP + M.FACE_H, M.HUB.h, { name: "stand.hub" }))],
+  );
 }
 
 {
@@ -199,10 +254,25 @@ function knurlAlong(F, radius, s0, s1, count) {
   );
 }
 
+const needlePath = (turn) => {
+  const angle = M.DIAL_ZERO + turn * Math.PI * 2;
+  const sx = Math.sin(angle);
+  const sy = -Math.cos(angle);
+  return k.lineOnTop(
+    [M.CASE.x - sx * M.HUB.r, M.CASE.y - sy * M.HUB.r],
+    [M.CASE.x + sx * M.NEEDLE.r1, M.CASE.y + sy * M.NEEDLE.r1],
+    M.NEEDLE.z,
+    P,
+  );
+};
+
 A.settle(R, P);
 R.items.sort((a, b) => a.key - b.key);
 
-const items = R.items.map((item) => `<g class="it" data-name="${item.name}"${item.part ? ` data-part="${item.part}"` : ""}>${item.svg}</g>`);
+const items = [
+  ...R.items.map((item) => `<g class="it" data-name="${item.name}"${item.part ? ` data-part="${item.part}"` : ""}>${item.svg}</g>`),
+  `<path data-part="needle" class="iso-line" data-tone="lit" data-free="end" d="${needlePath(M.turnOf(M.travelOf(M.REST_TOP)))}" style="stroke-width:1.1"/>`,
+];
 
 const model = readFileSync(join(HERE, "model.mjs"), "utf8").replace(/^export /gm, "");
 

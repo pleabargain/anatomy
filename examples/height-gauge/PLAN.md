@@ -53,12 +53,11 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
 
 | # | Task | Check | Done |
 |---|---|---|---|
-| S12 | Case: bored body ring on the arm | build runs, audit clean | [ ] |
-| S13 | Case: dome cap over the body | build runs, audit clean | [ ] |
-| S14 | Case: bezel ring + knurl | build runs, audit clean | [ ] |
-| S15 | Face: white disc | build runs, audit clean | [ ] |
-| S16 | Face: 20 divisions and the zero mark | build runs, audit clean | [ ] |
-| S17 | Face: hub and the needle at the rest angle | build runs, audit clean | [ ] |
+| S12 | Case: bored barrel, shoulder and knurled grip band | build runs, audit clean | [x] |
+| S13 | Face: the dial disc on the case | build runs, audit clean | [x] |
+| S14 | Face: chapter ring, 20 graduations, zero mark | build runs, audit clean | [x] |
+| S15 | Face: hub boss and the mm label | build runs, audit clean | [x] |
+| S16 | Face: the needle at the rest angle | build runs, audit clean | [x] |
 | S18 | Carriage: body and deck | build runs, audit clean | [ ] |
 | S19 | Carriage: 4 shoes on the ways | build runs, audit clean | [ ] |
 | S20 | Carriage: standard 1, 18 mm | build runs, audit clean | [ ] |
@@ -112,6 +111,10 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
 - S10 Stand: the arm and its underside rib.
 - S11 Stand: the knurled thumb screw on the east cheek.
   `node examples/height-gauge/build.mjs --audit` printed `audit passed` (11 items, 23 solids).
+- S12–S16 The dial: the bored case with its knurled grip band, the dial disc, the chapter ring
+  with twenty graduations and the zero mark, the hub boss and the needle at the rest angle.
+  `node examples/height-gauge/build.mjs --audit` printed `audit passed` (14 items, 27 solids).
+  A close-up of the dial shows the needle on graduation 14 with the carriage at rest.
 
 ## Log
 
@@ -120,3 +123,6 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
   the CI build list; the house rules in CONTRIBUTING. The upstream `examples/dial-indicator` is
   the reference for the same prompt and for the ride-over idiom.
 - S2–S11: `node examples/height-gauge/build.mjs --audit` printed `audit passed`.
+- S12–S16: `node examples/height-gauge/build.mjs --audit` printed `audit passed`.
+  `node scripts/capture.mjs examples/height-gauge/height-gauge.html --out shots/hg-02.png` and
+  `--zoom 180,40,200,140 --zoom-scale 4` read the dial: the needle points at graduation 14.
