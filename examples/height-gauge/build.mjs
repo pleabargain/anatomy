@@ -64,19 +64,20 @@ function knurlAlong(F, radius, s0, s1, count) {
 {
   const z = M.FACE_TOP;
   const top = z + M.FACE_H;
-  const ticks = k.radialTicks(M.CASE.x, M.CASE.y, M.GRAD_R, M.SCALE, M.MAJOR_EVERY, top, [1.3, 2.4], P, M.DIAL_ZERO);
+  const ticks = k.radialTicks(M.CASE.x, M.CASE.y, M.GRAD_R, M.SCALE, M.MAJOR_EVERY, top, [M.GRAD_MINOR, M.GRAD_MAJOR], P, M.DIAL_ZERO);
   const zero = [Math.sin(M.DIAL_ZERO), -Math.cos(M.DIAL_ZERO)];
   put(
     "stand.face",
     [M.CASE.x, M.CASE.y, z],
     S(k.cylinder(M.CASE.x, M.CASE.y, M.FACE_R, z, M.FACE_H, P, 64, 0.5), { tone: "hi", crease: "lo" }) +
       Ln(k.ring(M.CASE.x, M.CASE.y, M.GRAD_R, top, P, 64), { tone: "faint" }) +
+      Ln(k.ring(M.CASE.x, M.CASE.y, M.GRAD_INNER, top, P, 64), { tone: "faint" }) +
       Ln(ticks.minor, { tone: "lo" }) +
       Ln(ticks.major, { tone: "mid" }) +
       Ln(
         k.lineOnTop(
           [M.CASE.x + zero[0] * M.GRAD_R, M.CASE.y + zero[1] * M.GRAD_R],
-          [M.CASE.x + zero[0] * (M.GRAD_R - 3.4), M.CASE.y + zero[1] * (M.GRAD_R - 3.4)],
+          [M.CASE.x + zero[0] * M.GRAD_INNER, M.CASE.y + zero[1] * M.GRAD_INNER],
           top,
           P,
         ),
@@ -127,6 +128,7 @@ function knurlAlong(F, radius, s0, s1, count) {
       record(A.slab(plan, z, h, { name: "carriage.body" })),
       ...ribs.map((rib) => record(A.slab(rib, z + h, 0.7, { name: "carriage.body" }))),
     ],
+    { part: "carriage" },
   );
 }
 
@@ -140,7 +142,7 @@ function knurlAlong(F, radius, s0, s1, count) {
       svg.push(S(k.slabOf(plan, M.WAY_H, M.SHOE.h, P, 3, 0.4), { tone: "lo" }));
     }
   }
-  put("carriage.shoes", [0, 0, M.WAY_H + M.SHOE.h / 2], svg.join(""), shapes);
+  put("carriage.shoes", [0, 0, M.WAY_H + M.SHOE.h / 2], svg.join(""), shapes, { part: "carriage" });
 }
 
 for (const block of M.BLOCKS) {
@@ -151,6 +153,7 @@ for (const block of M.BLOCKS) {
     S(k.slabOf(plan, M.DECK, block.h, P, 4, 0.5), { tone: "hi", crease: "lo" }) +
       Ln(k.planOutline(k.insetPlan(plan, 2.5), M.DECK + block.h, P, 4), { tone: "faint" }),
     [record(A.slab(plan, M.DECK, block.h, { name: "carriage.standard" }))],
+    { part: "carriage" },
   );
 }
 
@@ -161,6 +164,7 @@ for (const block of M.BLOCKS) {
     [M.INDEX.x + M.INDEX.w / 2, M.INDEX.y + M.INDEX.d / 2, M.INDEX.z + M.INDEX.h / 2],
     S(k.slabOf(plan, M.INDEX.z, M.INDEX.h, P, 2, 0.2), { tone: "mid", crease: "lo" }),
     [record(A.slab(plan, M.INDEX.z, M.INDEX.h, { name: "carriage.index" }))],
+    { part: "carriage" },
   );
 }
 
@@ -172,6 +176,7 @@ for (const block of M.BLOCKS) {
     S(G.disc(0, M.KNOB.len, M.KNOB.r, F, P, { steps: 28 }), { tone: "mid" }) +
       Ln(knurlAlong(F, M.KNOB.r, 0.5, M.KNOB.len - 0.5, 18), { tone: "lo" }),
     [record(A.disc(F, 0, M.KNOB.len, M.KNOB.r, { name: "carriage.knob" }))],
+    { part: "carriage" },
   );
 }
 
@@ -186,6 +191,7 @@ for (const block of M.BLOCKS) {
       record(A.cylinder(M.ANVIL.x, M.ANVIL.y, M.ANVIL.r, top, M.ANVIL.h, { name: "plunger" })),
       record(A.cylinder(M.ANVIL.x, M.ANVIL.y, M.STEM_R, top + M.ANVIL.h, M.PLUNGER_L, { name: "plunger" })),
     ],
+    { part: "plunger" },
   );
 }
 
@@ -226,7 +232,7 @@ for (const block of M.BLOCKS) {
     "stand.nameplate",
     [plan.x + plan.w / 2, plan.y + plan.d / 2, M.NAME_H / 2],
     S(k.slabOf(plan, 0, M.NAME_H, P, 3, 0.3), { tone: "lo" }) +
-      rules.map(([a, b]) => Ln(k.lineOnTop(a, b, M.NAME_H, P), { tone: "mid" })).join("") +
+      rules.map(([a, b]) => Ln(k.lineOnTop(a, b, M.NAME_H, P), { tone: "mid", free: true })).join("") +
       Dots([at([plan.x + 2.4, plan.y + 2.2, M.NAME_H]), at([plan.x + plan.w - 2.4, plan.y + plan.d - 2.2, M.NAME_H])], { size: 0.45, tone: "lo" }),
     [record(A.slab(plan, 0, M.NAME_H, { name: "stand.nameplate" }))],
   );
@@ -234,11 +240,13 @@ for (const block of M.BLOCKS) {
 
 {
   const plan = M.SCALE_STRIP;
-  const ticks = k.topTicks(plan.x + 2, plan.x + plan.w - 2, 2, 10, plan.y, M.SCALE_H, [1.4, 2.6], P);
+  const rule = plan.y + M.SCALE_TICK.major;
+  const ticks = k.topTicks(plan.x + 2, plan.x + plan.w - 2, 2, 10, plan.y, M.SCALE_H, [M.SCALE_TICK.minor, M.SCALE_TICK.major], P);
   put(
     "stand.scale",
     [plan.x + plan.w / 2, plan.y + plan.d / 2, M.SCALE_H / 2],
     S(k.slabOf(plan, 0, M.SCALE_H, P, 3, 0.2), { tone: "lo" }) +
+      Ln(k.lineOnTop([plan.x, rule], [plan.x + plan.w, rule], M.SCALE_H, P), { tone: "faint" }) +
       Ln(ticks.minor, { tone: "lo" }) +
       Ln(ticks.major, { tone: "mid" }),
     [record(A.slab(plan, 0, M.SCALE_H, { name: "stand.scale" }))],
@@ -347,14 +355,15 @@ for (const block of M.BLOCKS) {
   );
 }
 
+const { DIAL_ZERO, CASE, HUB, NEEDLE } = M;
 const needlePath = (turn) => {
-  const angle = M.DIAL_ZERO + turn * Math.PI * 2;
+  const angle = DIAL_ZERO + turn * Math.PI * 2;
   const sx = Math.sin(angle);
   const sy = -Math.cos(angle);
   return k.lineOnTop(
-    [M.CASE.x - sx * M.HUB.r, M.CASE.y - sy * M.HUB.r],
-    [M.CASE.x + sx * M.NEEDLE.r1, M.CASE.y + sy * M.NEEDLE.r1],
-    M.NEEDLE.z,
+    [CASE.x - sx * HUB.r, CASE.y - sy * HUB.r],
+    [CASE.x + sx * NEEDLE.r1, CASE.y + sy * NEEDLE.r1],
+    NEEDLE.z,
     P,
   );
 };
@@ -369,10 +378,79 @@ const items = [
 
 const model = readFileSync(join(HERE, "model.mjs"), "utf8").replace(/^export /gm, "");
 
+const live = `
+const P = ${JSON.stringify(P)};
+const REST_X = ${M.REST};
+const needlePath = ${needlePath.toString().replace("k.lineOnTop", "lineOnTop")};
+const stage = document.querySelector(".iso-stage");
+const svg = stage.querySelector("svg");
+const carriage = [...svg.querySelectorAll('[data-part="carriage"]')];
+const plunger = [...svg.querySelectorAll('[data-part="plunger"]')];
+const needle = svg.querySelector('[data-part="needle"]');
+const readout = document.querySelector("[data-readout]");
+const still = matchMedia("(prefers-reduced-motion: reduce)");
+const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
+const screenX = (x) => iso([x, 0, DECK], P)[0];
+const perUnit = screenX(1) - screenX(0);
+const toUser = (event) => new DOMPoint(event.clientX, event.clientY).matrixTransform(svg.getScreenCTM().inverse());
+let x = REST_X, target = x, tip = { at: REST_TOP, rate: 0 };
+let frame = 0, last = 0, clock = 0, touring = true, visible = false, idleTimer = 0;
+const tourAt = (t) => STOPS[Math.floor(t / 2.4) % STOPS.length];
+function draw() {
+  const dx = x - REST_X;
+  carriage.forEach((el) => el.setAttribute("transform", translateAlong(P, [dx, 0, 0])));
+  plunger.forEach((el) => el.setAttribute("transform", translateAlong(P, [0, 0, tip.at - REST_TOP])));
+  needle.setAttribute("d", needlePath(turnOf(travelOf(tip.at))));
+  const text = readoutOf(x);
+  if (readout.textContent !== text) readout.textContent = text;
+  stage.setAttribute("aria-valuenow", String(Math.round(travelOf(tip.at))));
+  stage.setAttribute("aria-valuetext", wordsOf(x));
+}
+function tick(now) {
+  const dt = last ? Math.min((now - last) / 1000, 1 / 30) : 1 / 60;
+  last = now;
+  const calm = still.matches;
+  if (touring) { clock += dt; target = tourAt(clock); }
+  x = calm ? target : x + (target - x) * (1 - Math.exp(-dt / 0.28));
+  if (Math.abs(target - x) < 0.01) x = target;
+  const want = contactAt(x).top;
+  const stiff = 420, drag = calm ? 2 * Math.sqrt(420) : 26;
+  for (let i = 0; i < 4; i++) { tip.rate += ((want - tip.at) * stiff - tip.rate * drag) * dt / 4; tip.at += tip.rate * dt / 4; }
+  if (Math.abs(want - tip.at) < 0.005 && Math.abs(tip.rate) < 0.005) { tip.at = want; tip.rate = 0; }
+  draw();
+  const settled = !touring && x === target && tip.rate === 0 && tip.at === want;
+  frame = visible && !settled ? requestAnimationFrame(tick) : 0;
+}
+const run = () => { if (!frame && visible) { last = 0; frame = requestAnimationFrame(tick); } };
+const steer = (next) => {
+  touring = false;
+  target = clamp(next, TRAVEL.from, TRAVEL.to);
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => { touring = !still.matches; clock = 0; run(); }, 3600);
+  run();
+};
+new IntersectionObserver((entries) => { visible = entries[entries.length - 1].isIntersecting; if (visible) run(); }, { rootMargin: "120px 0px" }).observe(stage);
+if (still.matches) touring = false;
+stage.addEventListener("pointermove", (event) => steer((toUser(event).x - screenX(0)) / perUnit));
+stage.addEventListener("pointerleave", () => steer(target));
+stage.addEventListener("keydown", (event) => {
+  const here = STOPS.reduce((best, stop, index) => (Math.abs(stop - target) < Math.abs(STOPS[best] - target) ? index : best), 0);
+  let to = null;
+  if (event.key === "ArrowRight" || event.key === "ArrowUp") to = Math.max(0, here - 1);
+  if (event.key === "ArrowLeft" || event.key === "ArrowDown") to = Math.min(STOPS.length - 1, here + 1);
+  if (event.key === "Home") to = 0;
+  if (event.key === "End") to = STOPS.length - 1;
+  if (to === null) return;
+  event.preventDefault();
+  steer(STOPS[to]);
+});
+draw();
+`;
+
 const card = k.plateHtml({
   fig: "Fig 1",
   title: "Height gauge",
-  hint: "Drag the carriage",
+  hint: "Hover or drag the carriage",
   readout: M.readoutOf(M.REST),
   keys: [
     { mark: "lit", label: "Needle and anvil: what moves when the height changes" },
@@ -389,7 +467,7 @@ const card = k.plateHtml({
   })}</div>`,
 });
 
-const page = k.pageHtml({ title: "Height gauge", theme: THEME, body: card, script: kitScript() + model, width: 700 });
+const page = k.pageHtml({ title: "Height gauge", theme: THEME, body: card, script: kitScript() + model + live, width: 700 });
 
 const file = join(HERE, THEME === "light" ? "height-gauge-light.html" : "height-gauge.html");
 writeFileSync(file, page);
