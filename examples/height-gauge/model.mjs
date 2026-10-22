@@ -25,7 +25,7 @@ export const BLOCKS = [
   { id: 2, x: 0, h: 14 },
   { id: 3, x: 19, h: 10 },
 ];
-export const ANVIL = { x: 0, y: 0, r: 1.6, h: 0.8 };
+export const ANVIL = { x: 0, y: 0, r: 2.4, h: 0.8 };
 export const STEM_R = 1.6;
 export const PLUNGER_L = 25;
 export const CASE = { x: 0, y: 0, r: 15, z: 48, h: 22 };
@@ -48,10 +48,10 @@ export const STAND_BASE_H = 10;
 export const COLUMN = { x: -9, y: -56, w: 18, d: 12, r: 2 };
 export const COLUMN_TOP = 48;
 export const CLAMP = { w: 6, d: 2, z: 34, h: 14, x: 6 };
-export const ARM = { x: -6, y: -44, w: 12, d: 40, r: 3, z: 42, h: 6 };
-export const YOKE = { w: 3, y: -4, d: 11, z: 42, h: 6, x: 6 };
+export const ARM = { x: -6, y: -44, w: 12, d: 34, r: 3, z: 42, h: 6 };
+export const YOKE = { w: 3, x: 5, y: -10, d: 10, z: 42, h: 6 };
 export const THUMB = { r: 3, len: 3.5, z: 40 };
-export const INDEX = { x: -1, y: 25, w: 2, d: 1.2, h: 12 };
+export const INDEX = { x: -1.2, y: 25, w: 2.4, d: 1.2, z: 1.2, h: 11.8 };
 export const KNOB = { r: 3, len: 4, z: 10.5 };
 export const REST = 0;
 export const REST_TOP = DECK + BLOCKS[1].h;

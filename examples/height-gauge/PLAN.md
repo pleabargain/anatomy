@@ -58,16 +58,16 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
 | S14 | Face: chapter ring, 20 graduations, zero mark | build runs, audit clean | [x] |
 | S15 | Face: hub boss and the mm label | build runs, audit clean | [x] |
 | S16 | Face: the needle at the rest angle | build runs, audit clean | [x] |
-| S18 | Carriage: body and deck | build runs, audit clean | [ ] |
-| S19 | Carriage: 4 shoes on the ways | build runs, audit clean | [ ] |
-| S20 | Carriage: standard 1, 18 mm | build runs, audit clean | [ ] |
-| S21 | Carriage: standard 2, 14 mm | build runs, audit clean | [ ] |
-| S22 | Carriage: standard 3, 10 mm | build runs, audit clean | [ ] |
-| S23 | Carriage: index blade on the scale strip | build runs, audit clean | [ ] |
-| S24 | Carriage: west knob on the end face | build runs, audit clean | [ ] |
-| S25 | Plunger: anvil resting on the standard | build runs, audit clean | [ ] |
-| S26 | Plunger: stem in the bore | build runs, audit clean | [ ] |
-| S27 | `node build.mjs --audit` | prints `audit passed` | [ ] |
+| S17 | Carriage: body and deck | build runs, audit clean | [x] |
+| S18 | Carriage: 4 shoes on the ways | build runs, audit clean | [x] |
+| S19 | Carriage: standard 1, 18 mm | build runs, audit clean | [x] |
+| S20 | Carriage: standard 2, 14 mm | build runs, audit clean | [x] |
+| S21 | Carriage: standard 3, 10 mm | build runs, audit clean | [x] |
+| S22 | Carriage: index blade on the scale strip | build runs, audit clean | [x] |
+| S23 | Carriage: west knob on the end face | build runs, audit clean | [x] |
+| S24 | Plunger: anvil resting on the standard | build runs, audit clean | [x] |
+| S25 | Plunger: stem in the bore | build runs, audit clean | [x] |
+| S26 | `node build.mjs --audit` | prints `audit passed` | [x] |
 | S28 | Live: page script, carriage moves in x | carriage follows the model | [ ] |
 | S29 | Live: needle angle from the model | needle points at the travel | [ ] |
 | S30 | Live: readout text from the model | readout shows the standard | [ ] |
@@ -115,6 +115,15 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
   with twenty graduations and the zero mark, the hub boss and the needle at the rest angle.
   `node examples/height-gauge/build.mjs --audit` printed `audit passed` (14 items, 27 solids).
   A close-up of the dial shows the needle on graduation 14 with the carriage at rest.
+- S17–S26 The carriage and the plunger: the carriage body with two raised lands and four
+  countersunk screws, four shoes on the ways, the three standards 18, 14 and 10 mm, the index
+  blade riding over the scale strip, the knurled knob on the west end, and the plunger with its
+  anvil and its stem inside the case bore.
+  The first run failed the depth order: the plunger and the arm interlocked, because the yoke
+  prongs crossed the stem on screen while the arm's near face fell behind it. The fix was a cut,
+  not a bias: the arm now stops at y=-10 and the prongs sit at x 5..8, so the plunger passes in
+  front of the arm. `node examples/height-gauge/build.mjs --audit` printed `audit passed`
+  (22 items, 41 solids).
 
 ## Log
 

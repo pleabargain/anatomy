@@ -97,6 +97,99 @@ function knurlAlong(F, radius, s0, s1, count) {
 }
 
 {
+  const plan = M.CARRIAGE;
+  const z = M.CARRIAGE_BOTTOM;
+  const h = M.DECK - M.CARRIAGE_BOTTOM;
+  const screws = [
+    [-30, -21],
+    [30, -21],
+    [-30, 21],
+    [30, 21],
+  ];
+  const ribs = [
+    { x: -31, y: 16, w: 19, d: 7, r: 1 },
+    { x: 12, y: 16, w: 19, d: 7, r: 1 },
+  ];
+  put(
+    "carriage.body",
+    [0, 0, z + h / 2],
+    S(k.slabOf(plan, z, h, P, 6, 0.8), { tone: "mid" }) +
+      Ln(k.planOutline(k.insetPlan(plan, 3), z + h, P, 6), { tone: "faint" }) +
+      ribs
+        .map(
+          (rib) =>
+            S(k.slabOf(rib, z + h, 0.7, P, 3, 0.2), { tone: "mid", crease: "none" }) +
+            Ln(k.planOutline(k.insetPlan(rib, 1.4), z + h + 0.7, P, 3), { tone: "faint" }),
+        )
+        .join("") +
+      Dots(screws.map(([x, y]) => at([x, y, z + h])), { size: 0.45, tone: "lo" }),
+    [
+      record(A.slab(plan, z, h, { name: "carriage.body" })),
+      ...ribs.map((rib) => record(A.slab(rib, z + h, 0.7, { name: "carriage.body" }))),
+    ],
+  );
+}
+
+{
+  const shapes = [];
+  const svg = [];
+  for (const sx of [-1, 1]) {
+    for (const sy of [-1, 1]) {
+      const plan = { x: sx * M.SHOE.x - M.SHOE.w / 2, y: sy * M.SHOE.y - M.SHOE.d / 2, w: M.SHOE.w, d: M.SHOE.d, r: 1 };
+      shapes.push(record(A.slab(plan, M.WAY_H, M.SHOE.h, { name: "carriage.shoe" })));
+      svg.push(S(k.slabOf(plan, M.WAY_H, M.SHOE.h, P, 3, 0.4), { tone: "lo" }));
+    }
+  }
+  put("carriage.shoes", [0, 0, M.WAY_H + M.SHOE.h / 2], svg.join(""), shapes);
+}
+
+for (const block of M.BLOCKS) {
+  const plan = { x: block.x - M.BLOCK_W / 2, y: -M.BLOCK_D / 2, w: M.BLOCK_W, d: M.BLOCK_D, r: 1 };
+  put(
+    `carriage.standard${block.id}`,
+    [block.x, 0, M.DECK + block.h / 2],
+    S(k.slabOf(plan, M.DECK, block.h, P, 4, 0.5), { tone: "hi", crease: "lo" }) +
+      Ln(k.planOutline(k.insetPlan(plan, 2.5), M.DECK + block.h, P, 4), { tone: "faint" }),
+    [record(A.slab(plan, M.DECK, block.h, { name: "carriage.standard" }))],
+  );
+}
+
+{
+  const plan = { x: M.INDEX.x, y: M.INDEX.y, w: M.INDEX.w, d: M.INDEX.d, r: 0.3 };
+  put(
+    "carriage.index",
+    [M.INDEX.x + M.INDEX.w / 2, M.INDEX.y + M.INDEX.d / 2, M.INDEX.z + M.INDEX.h / 2],
+    S(k.slabOf(plan, M.INDEX.z, M.INDEX.h, P, 2, 0.2), { tone: "mid", crease: "lo" }),
+    [record(A.slab(plan, M.INDEX.z, M.INDEX.h, { name: "carriage.index" }))],
+  );
+}
+
+{
+  const F = G.frameAlong([M.CARRIAGE.x, 0, M.KNOB.z], [-1, 0, 0]);
+  put(
+    "carriage.knob",
+    [M.CARRIAGE.x - M.KNOB.len / 2, 0, M.KNOB.z],
+    S(G.disc(0, M.KNOB.len, M.KNOB.r, F, P, { steps: 28 }), { tone: "mid" }) +
+      Ln(knurlAlong(F, M.KNOB.r, 0.5, M.KNOB.len - 0.5, 18), { tone: "lo" }),
+    [record(A.disc(F, 0, M.KNOB.len, M.KNOB.r, { name: "carriage.knob" }))],
+  );
+}
+
+{
+  const top = M.contactAt(M.REST).top;
+  put(
+    "plunger",
+    [M.ANVIL.x, M.ANVIL.y, top + M.ANVIL.h / 2],
+    S(k.cylinder(M.ANVIL.x, M.ANVIL.y, M.ANVIL.r, top, M.ANVIL.h, P, 28, 0.2), { tone: "hi", lit: true }) +
+      S(k.cylinder(M.ANVIL.x, M.ANVIL.y, M.STEM_R, top + M.ANVIL.h, M.PLUNGER_L, P, 20), { tone: "hi", lit: true, crease: "none" }),
+    [
+      record(A.cylinder(M.ANVIL.x, M.ANVIL.y, M.ANVIL.r, top, M.ANVIL.h, { name: "plunger" })),
+      record(A.cylinder(M.ANVIL.x, M.ANVIL.y, M.STEM_R, top + M.ANVIL.h, M.PLUNGER_L, { name: "plunger" })),
+    ],
+  );
+}
+
+{
   const plan = M.PLATE;
   const z = -M.PLATE_H;
   put(
