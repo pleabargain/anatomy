@@ -91,7 +91,7 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
 | S47 | CHANGELOG: entry under Unreleased | `git diff` shows CHANGELOG | [x] |
 | S48 | CI: add the height gauge to the build list | `git diff` shows the workflow | [x] |
 | S49 | Final rebuild of both themes, commit the pages | `git status --short` clean after rebuild | [x] |
-| S50 | Copy the example into `C:/Users/denni/.agents/skills/anatomy/examples/height-gauge/` | the installed skill has the folder | [ ] |
+| S50 | Copy the example into `C:/Users/denni/.agents/skills/anatomy/examples/height-gauge/` | the installed skill has the folder | [x] |
 | S51 | Push to the fork | explicit approval first | [ ] |
 
 ### Done
@@ -156,3 +156,5 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
 - S27–S49: the live script, the line-end check (`line ends: 0` on both pages), the captures and
   the documentation all landed. `node examples/height-gauge/build.mjs --audit` printed
   `audit passed` and the two built pages are byte-identical on a rebuild.
+- S50: `diff -rq examples/height-gauge ~/.agents/skills/anatomy/examples/height-gauge` printed
+  nothing (exit 0): the installed skill already held an identical copy of the example.
