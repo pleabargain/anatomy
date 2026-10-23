@@ -92,7 +92,7 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
 | S48 | CI: add the height gauge to the build list | `git diff` shows the workflow | [x] |
 | S49 | Final rebuild of both themes, commit the pages | `git status --short` clean after rebuild | [x] |
 | S50 | Copy the example into `C:/Users/denni/.agents/skills/anatomy/examples/height-gauge/` | the installed skill has the folder | [x] |
-| S51 | Push to the fork | explicit approval first | [ ] |
+| S51 | Push to the fork | explicit approval first | [x] |
 
 ### Done
 
@@ -158,3 +158,4 @@ turn = travel / 20. The readout, the needle and the caption all read from `model
   `audit passed` and the two built pages are byte-identical on a rebuild.
 - S50: `diff -rq examples/height-gauge ~/.agents/skills/anatomy/examples/height-gauge` printed
   nothing (exit 0): the installed skill already held an identical copy of the example.
+- S51: approved, `git push origin main` printed `1482e84..26f5525  main -> main`.
